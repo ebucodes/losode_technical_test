@@ -10,19 +10,11 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     //
-    public function __construct(protected UserService $userService) {}
+    public function __construct(protected UserService $userServices) {}
 
     // get all users 
     public function getAllUsers(): JsonResponse
     {
-        return $this->userService->fetchAllUsers();
-    }
-
-    // get single user
-    public function getUser(Request $request): JsonResponse
-    {
-        $userId = $request->input('userId');
-        logger('USER ID: ' . $userId);
-        return $this->userService->fetchUser($userId);
+        return $this->userServices->fetchAllUsers();
     }
 }
