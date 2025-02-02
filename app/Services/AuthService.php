@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\UserRolesEnum;
+use App\Exceptions\InvalidRequestException;
+use App\Exceptions\ValidationException;
 use App\Helpers\Helper;
 use App\Helpers\ResponseMessages;
 use App\Helpers\ResponseStatusCodes;
@@ -11,11 +14,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AuthService
 {
     // 
-    public function login(array $credentials): JsonResponse
+    public function signIn(array $credentials): JsonResponse
     {
         try {
 
@@ -40,23 +44,23 @@ class AuthService
     }
 
 
-    // public function registerBusiness(array $data): User
-    // {
-    //     return User::create([
-    //         ...$data,
-    //         'type' => 'business',
-    //         'password' => Hash::make($data['password'])
-    //     ]);
-    // }
-
-    // public function registerUser(array $data): User
-    // {
-    //     return User::create([
-    //         ...$data,
-    //         'type' => 'user',
-    //         'password' => Hash::make($data['password'])
-    //     ]);
-    // }
-
-
+    public function signUp(array $data): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $newUser = User::create([
+                ...$data,
+                'avatar' => 'https://ui-avatars.com//api//?name=Tedbree',
+                'role' => UserRolesEnum::BUSINESS,
+                'password' => Hash::make($data['password'])
+            ]);
+            DB::commit();
+            return Helper::SuccessResponse(ResponseMessages::USER_CREATED, new UserDetailsResource($newUser), null, ResponseStatusCodes::CREATED);
+        } catch (\Throwable $th) {
+            //throw $th;
+            logger($th);
+            DB::rollBack();
+            return Helper::ErrorResponse(ResponseMessages::INTERNAL_SERVER_ERROR, [], ResponseStatusCodes::INTERNAL_SERVER_ERROR);
+        }
+    }
 }
