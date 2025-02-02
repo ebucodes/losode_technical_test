@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Route;
 // login function
 Route::post('login', [AuthController::class, 'login']);
 
+// register
+Route::post('register', [AuthController::class, 'register']);
+
 Route::middleware('auth:sanctum')->group(function () {
     // get all users
     Route::get('/user', [UserController::class, 'getAllUsers']);
