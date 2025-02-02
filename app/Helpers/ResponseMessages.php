@@ -8,6 +8,8 @@ class ResponseMessages
     const ACTION_FAILED = 'Action failed';
     const LOGIN_SUCCESSFUL = 'Login successful';
     const LOGOUT_SUCCESSFUL = 'Successful logged out user';
+
+    const USER_CREATED = 'User Created Successfully!';
     const LOGIN_FAILED = 'Login failed';
 
     const USER_NOT_FOUND = 'User not found';
