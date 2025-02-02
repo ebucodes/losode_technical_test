@@ -1,14 +1,16 @@
 <?php
 
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // login function
 Route::post('login', [AuthController::class, 'login']);
 
-// get all users
-Route::get('all-users', [AuthController::class, 'fetchAllUser']);
-
-// get single user
-Route::get('user/{uuid}', [AuthController::class, 'fetchSingleUser']);
+Route::middleware('auth:sanctum')->group(function () {
+    // get all users
+    Route::get('/user', [UserController::class, 'getAllUsers']);
+    // log out
+    Route::post('logout', [AuthController::class, 'logout']);
+});
