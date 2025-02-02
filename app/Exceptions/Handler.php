@@ -1,41 +1,35 @@
 <?php
 
-namespace App\Exceptions;
-
+use App\Exceptions\InvalidRequestException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var string[]
-     */
-    protected $dontReport = [
-        //
-    ];
-
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var string[]
-     */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
-
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register()
+    public function render($request, Throwable $exception)
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        // Handle API routes
+        if ($request->is('api/*')) {
+            // Handle validation exceptions (e.g., duplicate email)
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => $exception->errors(),
+                ], 422);
+            }
+
+            // Handle custom exceptions
+            if ($exception instanceof InvalidRequestException) {
+                return $exception->render($request);
+            }
+
+            // Default error response for API
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 500);
+        }
+
+        return parent::render($request, $exception);
     }
 }
