@@ -26,27 +26,4 @@ class UserService
             return Helper::ErrorResponse(ResponseMessages::INTERNAL_SERVER_ERROR, [], ResponseStatusCodes::INTERNAL_SERVER_ERROR);
         }
     }
-
-    // 
-    public function fetchUser(Request $request): JsonResponse
-    {
-        try {
-            $userId = $request->input('userId');
-            $user = User::where('uuid', $userId)->first();
-            // 
-            if (empty($userId)) {
-
-                return Helper::ErrorResponse(ResponseMessages::USER_NOT_FOUND, [], ResponseStatusCodes::NOT_FOUND);
-            }
-            // 
-            if (!$user) {
-                return Helper::ErrorResponse(ResponseMessages::USER_NOT_FOUND, [], ResponseStatusCodes::NOT_FOUND);
-            }
-
-            return Helper::SuccessResponse(ResponseMessages::ACTION_SUCCESSFUL, new UserDetailsResource($user), null, ResponseStatusCodes::SUCCESS);
-        } catch (\Throwable $th) {
-            logger($th);
-            return Helper::ErrorResponse(ResponseMessages::INTERNAL_SERVER_ERROR, [], ResponseStatusCodes::INTERNAL_SERVER_ERROR);
-        }
-    }
 }
