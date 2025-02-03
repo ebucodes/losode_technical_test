@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\v1\JobListingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::group(['prefix' => 'my', 'middleware' => ['auth:sanctum', 'business']], function () {
+    Route::get('jobs', [JobListingController::class, 'index']);
+    Route::post('jobs', [JobListingController::class, 'store']);
+    Route::patch('jobs/{job_id}', [JobListingController::class, 'update']);
+    Route::delete('jobs/{job_id}', [JobListingController::class, 'destroy']);
+});
