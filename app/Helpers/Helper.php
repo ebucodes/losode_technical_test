@@ -97,9 +97,9 @@ class Helper
     }
 
     // 
-    public static function UploadFile($file, $destinationPath)
+    public static function UploadFile($applicant, $file, $destinationPath)
     {
-        $file_name = time() . '.' . $file->getClientOriginalExtension();
+        $file_name = $applicant . '-' . time() . '.' . $file->getClientOriginalExtension();
         $file->move($destinationPath, $file_name);
         return $file_name;
     }
