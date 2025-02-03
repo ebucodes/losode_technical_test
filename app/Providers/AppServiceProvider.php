@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Interfaces\JobListingInterface;
+use App\Interfaces\JobListingRepositoryInterface;
+use App\Repositories\JobListingRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -12,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        // $this->app->bind(JobRepositoryInterface::class, JobRepository::class);
+        $this->app->bind(JobListingInterface::class, JobListingRepository::class);
         // $this->app->bind(ApplicationRepositoryInterface::class, ApplicationRepository::class);
     }
 
