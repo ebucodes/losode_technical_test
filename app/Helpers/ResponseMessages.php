@@ -12,6 +12,8 @@ class ResponseMessages
     const USER_CREATED = 'User Created Successfully!';
     const JOB_CREATED = 'Job Successfully Created!';
 
+    const APPLICATION_SUBMITTED = 'Application Submitted Successfully!';
+
     const JOB_UPDATED = 'Job Successfully Updated!';
     const JOB_DELETED = 'Job Successfully Deleted!';
 
