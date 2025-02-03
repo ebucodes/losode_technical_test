@@ -7,7 +7,10 @@ use App\Helpers\ResponseMessages;
 use App\Helpers\ResponseStatusCodes;
 use App\Http\Resources\JobListingResource;
 use App\Interfaces\JobListingInterface;
+use App\Models\JobApplication;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -120,10 +123,8 @@ class JobListingService
                 return Helper::ErrorResponse(ResponseMessages::NO_RECORDS_FOUND, [], ResponseStatusCodes::NOT_FOUND);
             }
 
-            $updateJob = [
-                $this->jobListingRepository->delete($job_id),
-                // JobApplication::where('job_ref', $job_id)->delete();
-            ];
+            $this->jobListingRepository->delete($job_id);
+            JobApplication::where('job_ref', $job_id)->delete();
 
             // 
             Helper::LogActivity(Auth::user()->uuid, 'Job listing deleted', 'Job listing deleted successfully');
@@ -136,5 +137,18 @@ class JobListingService
             DB::rollBack();
             return Helper::ErrorResponse(ResponseMessages::INTERNAL_SERVER_ERROR, [], ResponseStatusCodes::INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 
+    public function getJobApplications(string $job_id, int $perPage = 20): LengthAwarePaginator
+    {
+        // Verify job belongs to business
+        $job = $this->jobListingRepository->getById($job_id);
+
+        if (!$job) {
+            throw new ModelNotFoundException('Job not found');
+        }
+
+        return $this->jobListingRepository->getPaginatedApplications($job_id, $perPage);
     }
 }

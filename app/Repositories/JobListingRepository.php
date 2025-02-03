@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\JobListing;
 use App\Interfaces\JobListingInterface;
+use App\Models\JobApplication;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class JobListingRepository implements JobListingInterface
 {
-    public function __construct(protected JobListing $model) {}
+    public function __construct(protected JobListing $model, protected JobApplication $jobApplications) {}
 
     // 
     public function getAll(array $filters = []): Collection
@@ -62,7 +63,6 @@ class JobListingRepository implements JobListingInterface
         return $jobListing;
     }
 
-
     // 
     public function update(string $job_id, array $data): JobListing
     {
@@ -78,10 +78,18 @@ class JobListingRepository implements JobListingInterface
         return $this->getById($job_id)->delete();
     }
 
-
+    // 
     public function getById(string $job_id): ?JobListing
     {
         // return $this->model->findOrFail($id);
         return $this->model->where('user_id', Auth::user()->uuid)->where('job_ref', $job_id)->first();
+    }
+
+    public function getPaginatedApplications(string $job_id, int $perPage): LengthAwarePaginator
+    {
+        return $this->jobApplications
+            ->where('job_id', $job_id)
+            ->with('job') // Optional: include job details
+            ->paginate($perPage);
     }
 }

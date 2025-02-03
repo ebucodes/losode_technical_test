@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Helpers\Helper;
+use App\Helpers\ResponseMessages;
+use App\Helpers\ResponseStatusCodes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreJobListingRequest;
 use App\Http\Requests\UpdateJobListingRequest;
@@ -55,5 +58,57 @@ class JobListingController extends Controller
     public function destroy(string $job_id): JsonResponse
     {
         return $this->jobListingService->deleteJobListing($job_id);
+    }
+
+    public function jobApplications(string $job_id, Request $request): JsonResponse
+    {
+        try {
+            // Get pagination parameter
+            $perPage = $request->get('per_page', 20);
+
+            // Get applications
+            $applications = $this->jobListingService->getJobApplications($job_id, $perPage);
+
+            return Helper::SuccessResponse(
+                ResponseMessages::ACTION_SUCCESSFUL,
+                $applications,
+                null,
+                ResponseStatusCodes::SUCCESS
+            );
+        } catch (\Throwable $th) {
+            return Helper::ErrorResponse(
+                ResponseMessages::INTERNAL_SERVER_ERROR,
+                [],
+                ResponseStatusCodes::INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+
+    protected function getPaginationLinks($paginator): array
+    {
+        $links = [];
+
+        $links[] = [
+            'url' => $paginator->previousPageUrl(),
+            'label' => 'pagination.previous',
+            'active' => false
+        ];
+
+        foreach ($paginator->getUrlRange(1, $paginator->lastPage()) as $page => $url) {
+            $links[] = [
+                'url' => $url,
+                'label' => $page,
+                'active' => $page === $paginator->currentPage()
+            ];
+        }
+
+        $links[] = [
+            'url' => $paginator->nextPageUrl(),
+            'label' => 'pagination.next',
+            'active' => false
+        ];
+
+        return $links;
     }
 }

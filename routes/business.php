@@ -10,4 +10,5 @@ Route::group(['prefix' => 'my', 'middleware' => ['auth:sanctum', 'business']], f
     Route::get('jobs/{job_id}', [JobListingController::class, 'view']);
     Route::patch('jobs/{job_id}', [JobListingController::class, 'update']);
     Route::delete('jobs/{job_id}', [JobListingController::class, 'destroy']);
+    Route::get('jobs/{job_id}/applications', [JobListingController::class, 'jobApplications']);
 });

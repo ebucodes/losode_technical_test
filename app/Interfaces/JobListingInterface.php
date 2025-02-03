@@ -2,6 +2,8 @@
 
 namespace App\Interfaces;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+
 interface JobListingInterface
 {
 
@@ -11,4 +13,5 @@ interface JobListingInterface
     public function view(string $job_id);
     public function update(string $job_id, array $data);
     public function delete(string $job_id);
+    public function getPaginatedApplications(string $job_id, int $perPage): LengthAwarePaginator;
 }

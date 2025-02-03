@@ -9,9 +9,10 @@ class JobApplication extends Model
 {
     //
     public $guarded = [];
+    public $with = ['job'];
 
-    public function job(): BelongsTo
+    public function job()
     {
-        return $this->belongsTo(JobListing::class, 'job_id');
+        return $this->belongsTo(JobListing::class, 'job_id', 'job_ref');
     }
 }
