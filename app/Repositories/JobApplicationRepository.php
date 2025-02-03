@@ -11,11 +11,8 @@ class JobApplicationRepository implements JobApplicationInterface
 
     // 
     public function create(string $job_id, array $data): JobApplication
-
     {
-        // $data['job_id'] = $job_id;
-        // return $this->model->create($data);
-        logger(json_encode($data));
+        // logger(json_encode($data));
         return $this->model->create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],

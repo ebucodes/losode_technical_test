@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreJobListingRequest;
 use App\Http\Requests\UpdateJobListingRequest;
 use App\Services\JobListingService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -75,9 +76,17 @@ class JobListingController extends Controller
                 null,
                 ResponseStatusCodes::SUCCESS
             );
-        } catch (\Throwable $th) {
+        } catch (ModelNotFoundException $e) {
+            logger($e);
             return Helper::ErrorResponse(
-                ResponseMessages::INTERNAL_SERVER_ERROR,
+                $e->getMessage(),
+                [],
+                ResponseStatusCodes::NOT_FOUND
+            );
+        } catch (\Throwable $th) {
+            logger($th);
+            return Helper::ErrorResponse(
+                ResponseMessages::ACTION_FAILED,
                 [],
                 ResponseStatusCodes::INTERNAL_SERVER_ERROR
             );

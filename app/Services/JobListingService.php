@@ -124,7 +124,7 @@ class JobListingService
             }
 
             $this->jobListingRepository->delete($job_id);
-            JobApplication::where('job_ref', $job_id)->delete();
+            // JobApplication::where('job_id', $job_id)->delete();
 
             // 
             Helper::LogActivity(Auth::user()->uuid, 'Job listing deleted', 'Job listing deleted successfully');
@@ -144,9 +144,8 @@ class JobListingService
     {
         // Verify job belongs to business
         $job = $this->jobListingRepository->getById($job_id);
-
         if (!$job) {
-            throw new ModelNotFoundException('Job not found');
+            throw new ModelNotFoundException(ResponseMessages::NO_RECORDS_FOUND);
         }
 
         return $this->jobListingRepository->getPaginatedApplications($job_id, $perPage);
