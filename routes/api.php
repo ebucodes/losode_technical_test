@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\JobApplicationController;
 use App\Http\Controllers\v1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,9 @@ Route::post('login', [AuthController::class, 'login']);
 
 // register
 Route::post('register', [AuthController::class, 'register']);
+
+// 
+Route::post('/jobs/{job_id}/apply', [JobApplicationController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // get all users
