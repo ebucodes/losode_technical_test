@@ -10,10 +10,15 @@ class ResponseMessages
     const LOGOUT_SUCCESSFUL = 'Successful logged out user';
 
     const USER_CREATED = 'User Created Successfully!';
+    const JOB_CREATED = 'Job Successfully Created!';
+
+    const JOB_UPDATED = 'Job Successfully Updated!';
+    const JOB_DELETED = 'Job Successfully Deleted!';
+
     const LOGIN_FAILED = 'Login failed';
 
     const USER_NOT_FOUND = 'User not found';
-
+    const NO_RECORDS_FOUND = 'No records found';
     const USER_REQUIRED = 'User ID is missing';
 
     const INVALID_AUTH_CREDENTIAL = 'Invalid login credentials';
