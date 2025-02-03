@@ -55,6 +55,13 @@ class JobListingRepository implements JobListingInterface
         return $this->model->create($data);
     }
 
+    // 
+    public function view(string $job_id): JobListing
+    {
+        $jobListing = $this->getById($job_id);
+        return $jobListing;
+    }
+
 
     // 
     public function update(string $job_id, array $data): JobListing

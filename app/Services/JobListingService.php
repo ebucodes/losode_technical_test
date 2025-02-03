@@ -54,7 +54,31 @@ class JobListingService
         }
     }
 
+    // 
+    public function viewJobListing(string $job_id)
+    {
+        try {
+            DB::beginTransaction();
+            // 
+            $job = $this->jobListingRepository->getById($job_id);
+            // 
+            if (!$job) {
+                return Helper::ErrorResponse(ResponseMessages::NO_RECORDS_FOUND, [], ResponseStatusCodes::NOT_FOUND);
+            }
 
+            $viewJob = $this->jobListingRepository->view($job_id);
+            // 
+            Helper::LogActivity(Auth::user()->uuid, 'Job listing fetched', 'Job listing fetched successfully');
+            DB::commit();
+            return Helper::SuccessResponse(ResponseMessages::ACTION_SUCCESSFUL, new JobListingResource($viewJob), null, ResponseStatusCodes::SUCCESS);
+        } catch (\Throwable $th) {
+            logger($th);
+            // 
+            Helper::LogActivity(Auth::user()->uuid, 'Failed to fetch job listing', ' failed to fetch job listing');
+            DB::rollBack();
+            return Helper::ErrorResponse(ResponseMessages::INTERNAL_SERVER_ERROR, [], ResponseStatusCodes::INTERNAL_SERVER_ERROR);
+        }
+    }
 
     // 
     public function updateJobListing(string $job_id, array $data)

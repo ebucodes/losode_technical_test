@@ -40,6 +40,12 @@ class JobListingController extends Controller
     }
 
     // 
+    public function view(string $job_id): JsonResponse
+    {
+        return $this->jobListingService->viewJobListing($job_id);
+    }
+
+    // 
     public function update(UpdateJobListingRequest $request, string $job_id): JsonResponse
     {
         return $this->jobListingService->updateJobListing($job_id, $request->validated());
